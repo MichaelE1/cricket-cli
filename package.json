@@ -1,0 +1,14 @@
+{
+  "name": "cricket-cli",
+  "version": "1.0.0",
+  "description": "View cricket scores on command line",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Esteban",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.83.0"
+  }
+}
