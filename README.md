@@ -1,6 +1,6 @@
 # CRICKET-CLI
 
-A means of watching the cricket from the comfort of your terminal.
+This is a command line application, using [Node.js](http://nodejs.org/), that lets you track cricket scores from the comfort of your terminal.
 
 ### What
 
