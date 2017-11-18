@@ -1,4 +1,4 @@
-const request = require("request");
+const request = require('request');
 const Table = require('cli-table');
 const chalk = require('chalk');
 const CFonts = require('cfonts');
@@ -7,6 +7,7 @@ const clear = require('clear');
 const APIurl = "http://cricscore-api.appspot.com/csa"; 
 
 let table = new Table();
+let unique_id = null;
 
 CFonts.say('GARRY', {
     font: 'block',         
@@ -19,11 +20,24 @@ CFonts.say('GARRY', {
     maxLength: '0'         
 });
 
+// Simple function to get user input
+function prompt(question, callback) {
+    let stdin = process.stdin,
+        stdout = process.stdout;
+
+    stdin.resume();
+    stdout.write(question);
+
+    stdin.once('data', function (data) {
+        callback(data.toString().trim());
+    });
+}
+
 // Retrieve summary of games currently being played
 request.get({ 
     url: APIurl,
     json: true,
-}, function(err, resp, body) { 
+}, (err, resp, body) => { 
 
     for (let i = 0; i < body.length; i++) {
         let index = i.toString();
@@ -33,16 +47,18 @@ request.get({
 
     console.log(table.toString());
     
-    prompt("Enter the match ID you would like to follow: ", function (input) {
-        let unique_id = body[input].id;
-
+    prompt("Enter the match ID you would like to follow: ", function loop (input) {
+        if (unique_id == null) {
+            unique_id = body[input].id;
+        }
+        
         // Retrieve details for chosen game
         request.get({
             url: APIurl + "?id=" + unique_id,
             json: true,
-        }, function(err, resp, body) {
+        }, (err, resp, body) => {
 
-            // String manipulation...
+            // Store all the info...
             let score = body[0].de.split("(")[0];
             let results = body[0].de.split("(")[1].split(",")
             let overs = results[0];
@@ -57,19 +73,13 @@ request.get({
             console.log(batter1);
             console.log(batter2);
             console.log("\n" + bowler + "\n");
+
+            if ('si' in body[0]) {
+                console.log (body[0].si + "\n");
+            }
+
+            // Update score every 30 seconds
+            setInterval(loop, 30000);
         }); 
     });
-}); 
-
-// Simple function to get user input
-function prompt(question, callback) {
-    let stdin = process.stdin,
-        stdout = process.stdout;
-
-    stdin.resume();
-    stdout.write(question);
-
-    stdin.once('data', function (data) {
-        callback(data.toString().trim());
-    });
-}
+});
