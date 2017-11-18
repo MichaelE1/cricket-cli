@@ -48,6 +48,13 @@ request.get({
     console.log(table.toString());
     
     prompt("Enter the match ID you would like to follow: ", function loop (input) {
+
+        // Basic input error checking
+        if (isNaN(input) || input >= body.length){
+            console.log("That's not a valid ID :@");
+            process.exit();
+        }
+        
         if (unique_id == null) {
             unique_id = body[input].id;
         }
