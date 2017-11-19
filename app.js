@@ -47,7 +47,7 @@ request.get({
 
     console.log(table.toString());
     
-    prompt("Enter the match ID you would like to follow: ", function loop (input) {
+    prompt("Enter the match ID you would like to follow: ", function loop (input = 0) {
 
         // Basic input error checking
         if (isNaN(input) || input >= body.length){
@@ -85,8 +85,8 @@ request.get({
                 console.log (body[0].si + "\n");
             }
 
-            // Update score every 30 seconds
-            setInterval(loop, 30000);
+            // Update score every 20 seconds
+            setInterval(loop, 20000);
         }); 
     });
 });

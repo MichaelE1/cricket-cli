@@ -1,9 +1,12 @@
 # CRICKET-CLI
 
-This is a command line application, using [Node.js](http://nodejs.org/), that tracks live cricket scores from the comfort of your terminal.
+This is a command line application, using [Node.js](http://nodejs.org/), that tracks live cricket scores.
 
 ### What
 
+![table](img/table.png)
+
+![score](img/score.png)
 
 ### How
 
