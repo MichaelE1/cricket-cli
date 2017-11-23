@@ -6,8 +6,8 @@ const clear = require('clear');
 
 const APIurl = "http://cricscore-api.appspot.com/csa"; 
 
-let table = new Table();
 let unique_id = null;
+let input = null;
 
 CFonts.say('GARRY', {
     font: 'block',         
@@ -29,25 +29,27 @@ function prompt(question, callback) {
     stdout.write(question);
 
     stdin.once('data', function (data) {
-        callback(data.toString().trim());
+        input = data.toString().trim();
+        callback();
     });
 }
 
-// Retrieve summary of games currently being played
+// Create table summary of games currently being played
 request.get({ 
     url: APIurl,
     json: true,
 }, (err, resp, body) => { 
+    let table = new Table();
 
     for (let i = 0; i < body.length; i++) {
         let index = i.toString();
         let game = body[i].t2 + " vs " + body[i].t1;
         table.push({[index] : [game]});
     }
-
+    
     console.log(table.toString());
     
-    prompt("Enter the match ID you would like to follow: ", function loop (input = 0) {
+    prompt("Enter the match ID you would like to follow: ", function loop() {
 
         // Basic input error checking
         if (isNaN(input) || input >= body.length){
@@ -55,17 +57,18 @@ request.get({
             process.exit();
         }
         
+        // Store the unique id of the match
         if (unique_id == null) {
             unique_id = body[input].id;
         }
-        
-        // Retrieve details for chosen game
+
+        // Retrieve details for chosen match
         request.get({
             url: APIurl + "?id=" + unique_id,
             json: true,
         }, (err, resp, body) => {
 
-            // Store all the info...
+            // Store the match info...
             let score = body[0].de.split("(")[0];
             let results = body[0].de.split("(")[1].split(",")
             let overs = results[0];
